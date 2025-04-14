@@ -1,98 +1,142 @@
-// Importing required libraries
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
+// Видаліть ці рядки:
+// import SimpleLightbox from "simplelightbox";
+// import "simplelightbox/dist/simple-lightbox.min.css";
+
+// Залиште ці імпорти:
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
-// DOM elements
+// DOM елементи
 const searchForm = document.getElementById('search-form');
 const gallery = document.querySelector('.gallery');
 const loader = document.getElementById('loader');
 
-// Create a lightbox instance
+// Створення екземпляра лайтбоксу - тепер використовуємо глобальний об'єкт
 let lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
 });
 
-// Pixabay API configuration
-const API_KEY = 'YOUR_PIXABAY_API_KEY'; // Замените на ваш ключ Pixabay API
-const API_URL = 'https://pixabay.com/api/';
+// Оновлений масив з демо-зображеннями
+const demoImages = [
+  {
+    webformatURL: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg",
+    largeImageURL: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",
+    tags: "природа, пейзаж, дерево",
+    likes: 120,
+    views: 5800,
+    comments: 25,
+    downloads: 980
+  },
+  {
+    webformatURL: "https://cdn.pixabay.com/photo/2016/11/18/16/19/flowers-1835619_960_720.jpg",
+    largeImageURL: "https://cdn.pixabay.com/photo/2016/11/18/16/19/flowers-1835619_1280.jpg",
+    tags: "квіти, природа, рослини",
+    likes: 89,
+    views: 3200,
+    comments: 15,
+    downloads: 620
+  },
+  {
+    webformatURL: "https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832_960_720.jpg",
+    largeImageURL: "https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832_1280.jpg",
+    tags: "природа, гори, озеро",
+    likes: 210,
+    views: 7400,
+    comments: 45,
+    downloads: 1500
+  },
+  {
+    webformatURL: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_960_720.jpg",
+    largeImageURL: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
+    tags: "дорога, осінь, дерева",
+    likes: 75,
+    views: 2800,
+    comments: 10,
+    downloads: 520
+  },
+  {
+    webformatURL: "https://cdn.pixabay.com/photo/2017/02/01/22/02/mountain-landscape-2031539_960_720.jpg",
+    largeImageURL: "https://cdn.pixabay.com/photo/2017/02/01/22/02/mountain-landscape-2031539_1280.jpg",
+    tags: "гори, пейзаж, природа",
+    likes: 110,
+    views: 4200,
+    comments: 32,
+    downloads: 850
+  },
+  {
+    webformatURL: "https://cdn.pixabay.com/photo/2014/09/14/18/04/dandelion-445228_960_720.jpg",
+    largeImageURL: "https://cdn.pixabay.com/photo/2014/09/14/18/04/dandelion-445228_1280.jpg",
+    tags: "кульбаба, природа, макро",
+    likes: 185,
+    views: 6100,
+    comments: 38,
+    downloads: 1200
+  }
+];
 
-// Add event listener for form submission
+// Додавання обробника події для форми пошуку
 searchForm.addEventListener('submit', handleSearch);
 
-// Function to handle image search
+// Функція обробки пошуку зображень
 async function handleSearch(event) {
   event.preventDefault();
   
-  // Get search query
-  const searchQuery = event.currentTarget.elements.searchQuery.value.trim();
+  // Отримуємо пошуковий запит
+  const searchQuery = event.currentTarget.elements.searchQuery.value.trim().toLowerCase();
   
-  // Validate search query
+  // Перевіряємо пошуковий запит
   if (!searchQuery) {
     iziToast.warning({
-      title: 'Внимание',
-      message: 'Пожалуйста, введите поисковый запрос',
+      title: 'Увага',
+      message: 'Будь ласка, введіть пошуковий запит',
       position: 'topCenter',
     });
     return;
   }
   
-  // Clear previous results
+  // Очищуємо попередні результати
   gallery.innerHTML = '';
   
-  // Show loader
+  // Показуємо індикатор завантаження
   loader.style.display = 'block';
   
   try {
-    // Fetch images from Pixabay API
-    const images = await fetchImages(searchQuery);
+    // Імітація завантаження даних із затримкою
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Handle search results
-    if (images.length === 0) {
+    // Фільтрація зображень за пошуковим запитом
+    const filteredImages = demoImages.filter(image => {
+      return image.tags.toLowerCase().includes(searchQuery);
+    });
+    
+    console.log('Пошуковий запит:', searchQuery);
+    console.log('Знайдено зображень:', filteredImages.length);
+    
+    // Обробка результатів пошуку
+    if (filteredImages.length === 0) {
       showNoImagesMessage();
     } else {
-      renderGallery(images);
+      renderGallery(filteredImages);
     }
   } catch (error) {
     showErrorMessage(error);
   } finally {
-    // Hide loader
+    // Ховаємо індикатор завантаження
     loader.style.display = 'none';
   }
 }
 
-// Function to fetch images from Pixabay API
-async function fetchImages(query) {
-  const params = new URLSearchParams({
-    key: API_KEY,
-    q: query,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: true,
-  });
-  
-  const response = await fetch(`${API_URL}?${params}`);
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-  
-  const data = await response.json();
-  return data.hits;
-}
-
-// Function to render gallery
+// Функція для відображення галереї
 function renderGallery(images) {
   const markup = images.map(image => createImageCard(image)).join('');
   gallery.innerHTML = markup;
   
-  // Refresh lightbox
+  // Оновлюємо лайтбокс
   lightbox.refresh();
 }
 
-// Function to create an image card
+// Функція для створення картки зображення
 function createImageCard({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) {
   return `
     <div class="photo-card">
@@ -100,29 +144,34 @@ function createImageCard({ webformatURL, largeImageURL, tags, likes, views, comm
         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
       </a>
       <div class="info">
-        <p class="info-item"><b>Likes</b> ${likes}</p>
-        <p class="info-item"><b>Views</b> ${views}</p>
-        <p class="info-item"><b>Comments</b> ${comments}</p>
-        <p class="info-item"><b>Downloads</b> ${downloads}</p>
+        <p class="info-item"><b>Вподобання</b> ${likes}</p>
+        <p class="info-item"><b>Перегляди</b> ${views}</p>
+        <p class="info-item"><b>Коментарі</b> ${comments}</p>
+        <p class="info-item"><b>Завантаження</b> ${downloads}</p>
       </div>
     </div>
   `;
 }
 
-// Function to show no images message
+// Функція для відображення повідомлення про відсутність зображень
 function showNoImagesMessage() {
   iziToast.info({
-    title: 'Информация',
-    message: 'Sorry, there are no images matching your search query. Please try again!',
+    title: 'Інформація',
+    message: 'На жаль, за вашим запитом не знайдено жодних зображень. Спробуйте інший запит!',
     position: 'topCenter',
   });
 }
 
-// Function to show error message
+// Функція для відображення повідомлення про помилку
 function showErrorMessage(error) {
   iziToast.error({
-    title: 'Ошибка',
-    message: `Произошла ошибка: ${error.message}`,
+    title: 'Помилка',
+    message: `Сталася помилка: ${error.message}`,
     position: 'topCenter',
   });
 }
+
+// Показуємо всі зображення при завантаженні сторінки
+window.addEventListener('DOMContentLoaded', () => {
+  renderGallery(demoImages);
+});

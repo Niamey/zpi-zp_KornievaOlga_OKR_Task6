@@ -1,27 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Поиск изображений</title>
+  <title>Пошук зображень</title>
   <link rel="stylesheet" href="./css/common.css">
   <link rel="stylesheet" href="./css/image-search.css">
+  <!-- SimpleLightbox CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.14.2/simple-lightbox.min.css">
 </head>
 <body>
-  <p><a href="./index.html" class="back-link">← На главную</a></p>
+  <p><a href="./index.html" class="back-link">← На головну</a></p>
   
   <div class="search-container">
-    <h2>Поиск изображений</h2>
+    <h2>Пошук зображень</h2>
     
     <form class="search-form" id="search-form">
       <input
         type="text"
         name="searchQuery"
         autocomplete="off"
-        placeholder="Что вы хотите найти?"
+        placeholder="Що ви хочете знайти?"
         required
       />
-      <button type="submit">Search</button>
+      <button type="submit">Пошук</button>
     </form>
     
     <div class="loader-container">
@@ -29,10 +31,12 @@
     </div>
     
     <div class="gallery">
-      <!-- Здесь будут отображаться карточки изображений -->
+      <!-- Тут будуть відображатися картки зображень -->
     </div>
   </div>
 
+  <!-- SimpleLightbox JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/2.14.2/simple-lightbox.min.js"></script>
   <script type="module" src="./js/3-image-search.js"></script>
 </body>
 </html>

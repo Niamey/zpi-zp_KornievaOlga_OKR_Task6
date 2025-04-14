@@ -3,6 +3,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: 'src',
+  base: '/zpi-zp_KornievaOlga_OKR_Task6/',
   build: {
     outDir: '../dist',
     rollupOptions: {

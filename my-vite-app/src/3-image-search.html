@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поиск изображений</title>
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/image-search.css">
+</head>
+<body>
+  <p><a href="./index.html" class="back-link">← На главную</a></p>
+  
+  <div class="search-container">
+    <h2>Поиск изображений</h2>
+    
+    <form class="search-form" id="search-form">
+      <input
+        type="text"
+        name="searchQuery"
+        autocomplete="off"
+        placeholder="Что вы хотите найти?"
+        required
+      />
+      <button type="submit">Search</button>
+    </form>
+    
+    <div class="loader-container">
+      <div class="loader" id="loader"></div>
+    </div>
+    
+    <div class="gallery">
+      <!-- Здесь будут отображаться карточки изображений -->
+    </div>
+  </div>
+
+  <script type="module" src="./js/3-image-search.js"></script>
+</body>
+</html>
